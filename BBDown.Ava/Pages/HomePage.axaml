@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:CompileBindings="True"
+        x:Class="BBDown.Ava.Pages.HomePage">
+  <StackPanel Margin="16">
+    <TextBlock Margin="0,4" Text="BBDown" FontSize="28" />
+    <TextBlock Margin="0,4" Text="Task" FontSize="22" />
+    <Grid Margin="0,4">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBox Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center" Watermark="URL, av, bv, BV, ep or ss..." />
+      <Button Grid.Column="1" Content="Download" VerticalAlignment="Center" Click="Download_OnClick" />
+    </Grid>
+    <TextBlock Margin="0,4" Text="Recent" FontSize="22" />
+    <TextBlock Margin="0,4" Text="Trending" FontSize="22" />
+  </StackPanel>
+</UserControl>

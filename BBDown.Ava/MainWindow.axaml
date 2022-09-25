@@ -2,8 +2,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:CompileBindings="True"
         x:Class="BBDown.Ava.MainWindow"
-        Title="BBDown.Ava">
-    <TextBox Name="textBox1" />
+        Title="BBDown"
+        Loaded="Window_OnLoaded">
+  <Grid>
+    <ui:NavigationView Name="naviView" SelectionChanged="NaviView_OnSelectionChanged" IsEnabled="{Binding ElementName=progressRing, Path=IsVisible, Converter={x:Static BoolConverters.Not}}">
+      <ui:NavigationView.MenuItems>
+        <ui:NavigationViewItem Icon="Home" Content="Home" Tag="Home" />
+        <ui:NavigationViewItem Icon="Download" Content="Downloads" Tag="Downloads" />
+        <ui:NavigationViewItem Icon="People" Content="Account" Tag="Account" />
+      </ui:NavigationView.MenuItems>
+      <ui:Frame Name="contentFrame" />
+    </ui:NavigationView>
+    <ui:ProgressRing IsVisible="False" Name="progressRing" IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="6" Width="48" Height="48" />
+  </Grid>
 </Window>

@@ -1,7 +1,10 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="BBDown.Ava.App">
-    <Application.Styles>
-        <FluentTheme Mode="Light"/>
-    </Application.Styles>
+             x:Class="BBDown.Ava.App"
+             x:CompileBindings="True"
+             xmlns:sty="using:FluentAvalonia.Styling">
+  <Application.Styles>
+    <sty:FluentAvaloniaTheme PreferSystemTheme="True" />
+    <StyleInclude Source="avares://BBDown.Ava/Controls/ProgressRing.axaml" />
+  </Application.Styles>
 </Application>
