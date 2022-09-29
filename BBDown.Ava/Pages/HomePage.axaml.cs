@@ -1,24 +1,29 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using BBDown.Ava.Services;
+using BBDown.Ava.ViewModels;
 
-namespace BBDown.Ava.Pages
+namespace BBDown.Ava.Pages;
+
+public partial class HomePage : UserControl
 {
-    public partial class HomePage : UserControl
+    private readonly MainWindowViewModel mainWindowViewModel;
+    public HomePage()
     {
-        private readonly ProcessingIndicator processingIndicator;
-        public HomePage()
-        {
-            InitializeComponent();
-            processingIndicator = AvaloniaLocator.Current.GetRequiredService<ProcessingIndicator>();
-        }
+        InitializeComponent();
+        mainWindowViewModel = AvaloniaLocator.Current.GetRequiredService<MainWindowViewModel>();
+    }
 
-        private async void Download_OnClick(object? sender, RoutedEventArgs args)
+    private async void Download_OnClick(object? sender, RoutedEventArgs args)
+    {
+        mainWindowViewModel.ShowProgressRing = true;
+        try
         {
-            processingIndicator.IsProcessing = true;
-            await Task.Delay(1000);
-            processingIndicator.IsProcessing = false;
+
+        }
+        finally
+        {
+            mainWindowViewModel.ShowProgressRing = false;
         }
     }
 }

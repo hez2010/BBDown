@@ -5,21 +5,37 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using BBDown.Ava.Pages;
 using BBDown.Ava.Services;
+using BBDown.Ava.ViewModels;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
+using Markdown.Avalonia;
 using System.Runtime.InteropServices;
 
 namespace BBDown.Ava;
 
 public partial class MainWindow : CoreWindow
 {
-    private readonly ProcessingIndicator processingIndicator;
+    private readonly MainWindowViewModel mainWindowViewModel = AvaloniaLocator.Current.GetRequiredService<MainWindowViewModel>();
+    private readonly FluentAvaloniaTheme theme = AvaloniaLocator.Current.GetRequiredService<FluentAvaloniaTheme>();
+
     public MainWindow()
     {
         InitializeComponent();
         naviView.SelectedItem = naviView.MenuItems.Cast<NavigationViewItem>().First();
-        processingIndicator = AvaloniaLocator.Current.GetRequiredService<ProcessingIndicator>();
+        DataContext = mainWindowViewModel;
+        mainWindowViewModel.DialogInvoked += async viewModel =>
+        {
+            var dialog = new ContentDialog
+            {
+                Title = viewModel.DialogTitle,
+                Content = new MarkdownScrollViewer { Markdown = viewModel.DialogContent },
+                PrimaryButtonText = viewModel.DialogPrimaryButtonText,
+                SecondaryButtonText = viewModel.DialogSecondaryButtonText,
+                CloseButtonText = viewModel.DialogCloseButtonText,
+            };
+            return await dialog.ShowAsync();
+        };
     }
 
     #region Mica
@@ -34,6 +50,7 @@ public partial class MainWindow : CoreWindow
             }
             else if (args.NewTheme == FluentAvaloniaTheme.HighContrastModeString)
             {
+                TransparencyLevelHint = WindowTransparencyLevel.None;
                 SetValue(BackgroundProperty, AvaloniaProperty.UnsetValue);
             }
         }
@@ -43,15 +60,12 @@ public partial class MainWindow : CoreWindow
     {
         base.OnOpened(e);
 
-        var theme = AvaloniaLocator.Current.GetRequiredService<FluentAvaloniaTheme>();
         theme.RequestedThemeChanged += OnRequestedThemeChanged;
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             if (IsWindows11 && theme.RequestedTheme != FluentAvaloniaTheme.HighContrastModeString)
             {
-                TransparencyBackgroundFallback = Brushes.Transparent;
-                TransparencyLevelHint = WindowTransparencyLevel.Mica;
                 TryEnableMicaEffect(theme);
             }
         }
@@ -61,6 +75,9 @@ public partial class MainWindow : CoreWindow
 
     private void TryEnableMicaEffect(FluentAvaloniaTheme theme)
     {
+        TransparencyBackgroundFallback = Brushes.Transparent;
+        TransparencyLevelHint = WindowTransparencyLevel.Mica;
+
         // The background colors for the Mica brush are still based around SolidBackgroundFillColorBase resource
         // BUT since we can't control the actual Mica brush color, we have to use the window background to create
         // the same effect. However, we can't use SolidBackgroundFillColorBase directly since its opaque, and if
@@ -89,6 +106,7 @@ public partial class MainWindow : CoreWindow
         return tag switch
         {
             "Home" => typeof(HomePage),
+            "Settings" => typeof(SettingsPage),
             _ => null
         };
     }
@@ -105,10 +123,8 @@ public partial class MainWindow : CoreWindow
         contentFrame.NavigateToType(type, null, new() { IsNavigationStackEnabled = true });
     }
 
-    private void Window_OnLoaded(object? sender, RoutedEventArgs args)
+    private async void Window_Loaded(object? sender, RoutedEventArgs args)
     {
-        processingIndicator.PropertyChanged += 
-            (obj, args) 
-                => progressRing.IsVisible = obj is ProcessingIndicator { IsProcessing: var p } && p;
+        await AvaloniaLocator.Current.GetRequiredService<UpdateService>().CheckUpdateAsync();
     }
 }

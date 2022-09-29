@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BBDown.Ava.Pages.SettingsPage">
+  <StackPanel Margin="16">
+    <TextBlock Margin="0,4" Text="Settings" FontSize="28" />
+    <TextBlock Margin="0,4" Text="Theme" FontSize="22" />
+    <ComboBox Margin="0,4" SelectedIndex="0" SelectionChanged="Theme_OnSelectionChanged">
+      <ComboBoxItem Content="System Default" />
+      <ComboBoxItem Content="Light Theme" />
+      <ComboBoxItem Content="Dark Theme" />
+      <ComboBoxItem Content="High Contrast" />
+    </ComboBox>
+  </StackPanel>
+</UserControl>
