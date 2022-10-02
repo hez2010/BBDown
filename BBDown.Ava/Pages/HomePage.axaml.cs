@@ -7,23 +7,23 @@ namespace BBDown.Ava.Pages;
 
 public partial class HomePage : UserControl
 {
-    private readonly MainWindowViewModel mainWindowViewModel;
+    private readonly MainViewModel mainViewModel;
     public HomePage()
     {
         InitializeComponent();
-        mainWindowViewModel = AvaloniaLocator.Current.GetRequiredService<MainWindowViewModel>();
+        mainViewModel = AvaloniaLocator.Current.GetRequiredService<MainViewModel>();
     }
 
     private async void Download_OnClick(object? sender, RoutedEventArgs args)
     {
-        mainWindowViewModel.ShowProgressRing = true;
+        mainViewModel.ShowProgressRing = true;
         try
         {
 
         }
         finally
         {
-            mainWindowViewModel.ShowProgressRing = false;
+            mainViewModel.ShowProgressRing = false;
         }
     }
 }

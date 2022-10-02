@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 
 namespace BBDown.Ava.ViewModels;
 
-public sealed class MainWindowViewModel : INotifyPropertyChanged
+public sealed class MainViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
-    public event Func<MainWindowViewModel, Task<ContentDialogResult>>? DialogInvoked;
+    public event Func<MainViewModel, Task<ContentDialogResult>>? DialogInvoked;
 
     private bool showProgressRing;
     public bool ShowProgressRing

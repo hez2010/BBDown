@@ -1,13 +1,14 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using BBDown.Ava.Services;
-using BBDown.Ava.ViewModels;
+using Live.Avalonia;
+using System.Diagnostics;
 using System.Net;
 
 namespace BBDown.Ava;
 
-public partial class App : Application
+public partial class App : Application, ILiveView
 {
     public static readonly HttpClient AppHttpClient;
 
@@ -29,19 +30,38 @@ public partial class App : Application
 
     public override void Initialize()
     {
-        AvaloniaLocator.CurrentMutable
-            .Bind<MainWindowViewModel>().ToSingleton<MainWindowViewModel>()
-            .Bind<UpdateService>().ToSingleton<UpdateService>();
         AvaloniaXamlLoader.Load(this);
+    }
+
+    public object CreateView(Window window)
+    {
+        return new MainView();
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            if (Debugger.IsAttached || IsProduction())
+            {
+                desktop.MainWindow = new MainWindow();
+            }
+            else
+            {
+                var window = new LiveViewHost(this, Console.WriteLine);
+                desktop.MainWindow = window;
+                window.StartWatchingSourceFilesForHotReloading();
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
     }
+
+    public bool IsProduction() =>
+#if DEBUG
+        false
+#else
+        true
+#endif
+    ;
 }

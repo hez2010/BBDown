@@ -8,7 +8,7 @@ namespace BBDown.Ava.Services;
 
 internal class UpdateService
 {
-    private readonly MainWindowViewModel mainWindowViewModel = AvaloniaLocator.Current.GetRequiredService<MainWindowViewModel>();
+    private readonly MainViewModel mainViewModel = AvaloniaLocator.Current.GetRequiredService<MainViewModel>();
 
     record AssetEntry(
         [property: JsonPropertyName("browser_download_url")]
@@ -38,7 +38,7 @@ internal class UpdateService
 
     public async Task CheckUpdateAsync()
     {
-        mainWindowViewModel.ShowProgressRing = true;
+        mainViewModel.ShowProgressRing = true;
         try
         {
             var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version!;
@@ -46,15 +46,15 @@ internal class UpdateService
             var latestRelease = await App.AppHttpClient.GetFromJsonAsync<ReleaseEntry>("https://api.github.com/repos/nilaoda/BBDown/releases/latest");
             if (latestRelease is not null && nowVer != latestRelease.Version)
             {
-                mainWindowViewModel.DialogPrimaryButtonText = "Update";
-                mainWindowViewModel.DialogCloseButtonText = "Cancel";
-                mainWindowViewModel.DialogTitle = $"New version available: {latestRelease.Title}";
-                mainWindowViewModel.DialogContent = $"""
+                mainViewModel.DialogPrimaryButtonText = "Update";
+                mainViewModel.DialogCloseButtonText = "Cancel";
+                mainViewModel.DialogTitle = $"New version available: {latestRelease.Title}";
+                mainViewModel.DialogContent = $"""
                     {latestRelease.Content}
 
                     {latestRelease.Version} - {latestRelease.PublishedAt:G}
                     """;
-                var result = await mainWindowViewModel.ShowDialogAsync();
+                var result = await mainViewModel.ShowDialogAsync();
                 if (result == FluentAvalonia.UI.Controls.ContentDialogResult.Primary)
                 {
                     Process.Start(new ProcessStartInfo
@@ -68,7 +68,7 @@ internal class UpdateService
         catch { }
         finally
         {
-            mainWindowViewModel.ShowProgressRing = false;
+            mainViewModel.ShowProgressRing = false;
         }
     }
 }

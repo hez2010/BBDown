@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -19,4 +19,7 @@
     <ProjectReference Include="..\BBDown.Core\BBDown.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Watch Include="**\*.axaml" />
+  </ItemGroup>
 </Project>
